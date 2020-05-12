@@ -14,3 +14,4 @@ Thumbs.db
 *.codekit3
 package-lock.json
 package.json
+.quokka
