@@ -1,9 +1,10 @@
-const passwordFields = document.querySelectorAll('[type="password"]');
+const passwordInput = Array.from(
+  document.querySelectorAll('[type="password"]'));
 const checkbox = document.querySelector('#show-passwords');
 
 function toggleVisability() {
-  passwordFields.forEach((element) => {
-    checkbox.checked ? (element.type = 'text') : (element.type = 'password');
+  passwordInput.forEach((input) => {
+    checkbox.checked ? (input.type = 'text') : (input.type = 'password');
   });
 }
 

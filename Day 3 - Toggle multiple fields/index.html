@@ -53,10 +53,18 @@
       </p>
     </form>
 
-    <script
-      type="text/javascript"
-      src="https://polyfill.io/v3/polyfill.js?features=Array.from"
-    ></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+      const passwordInput = Array.from(
+        document.querySelectorAll('[type="password"]'));
+      const checkbox = document.querySelector('#show-passwords');
+
+      function toggleVisability() {
+        passwordInput.forEach((input) => {
+          checkbox.checked ? (input.type = 'text') : (input.type = 'password');
+        });
+      }
+
+      checkbox.addEventListener('change', toggleVisability);
+    </script>
   </body>
 </html>
