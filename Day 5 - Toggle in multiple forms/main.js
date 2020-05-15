@@ -1,21 +1,15 @@
-// function toggglePassword(passwordInput) {
-//   passwordInput.checked
-//     ? (passwordInput.type = 'text')
-//     : (passwordInput.type = 'password');
-// }
-
-// function toggleVisability() {
-//   passwordInput.forEach((input) => {
-//     checkbox.checked ? (input.type = 'text') : (input.type = 'password');
-//   });
-// }
-
 document.addEventListener('click', (event) => {
-  if (event.target === ('[type="checkbox"]')) {
+  // check if the clicked element a checkbox
+  if (event.target.matches('[type="checkbox"]')) {
+    // get the 'form' element checkbox is located within
     const form = event.target.closest('form');
-    const passwordInputs = [...form.querySelectorAll('[type="password"]')];
+    // get all the input elements with the name 'password'; turn into array
+    // NB html edited to adjust name attr to just 'password'
+    const passwordInputs = [...form.querySelectorAll('[name="password"]')];
+    // loop over array of password inputs and change 'type' attr as needed
     passwordInputs.forEach((input) => {
       event.target.checked ? (input.type = 'text') : (input.type = 'password');
     });
   }
 });
+
