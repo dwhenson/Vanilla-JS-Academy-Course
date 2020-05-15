@@ -72,7 +72,7 @@
 
       <div>
         <label for="show-passwords">
-          <input type="checkbox" name="passwords" id="show-passwords" />
+          <input type="checkbox" name="show-passwords" id="show-passwords" />
           Show passwords
         </label>
       </div>
@@ -83,21 +83,32 @@
     </form>
 
     <script src="main.js">
-      /**
-     * In the first form, the #show-password checkbox should toggle the #password field visibility. In the second form, the #show-passwords checkbox should toggle the visibility of the #current-password and #new-password fields. As an extra challenge, see if you can figure out a way to write your script without having to duplicate your code for each form (it’s ok if you can’t).
-     */
+
 
       /**
        * Element.matches() polyfill (simple version)
        * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
        */
-      // if (!Element.prototype.matches) {
-      //   Element.prototype.matches =
-      //     Element.prototype.msMatchesSelector ||
-      //     Element.prototype.webkitMatchesSelector;
-      // }
-      
-      // Your code goes here...
+      if (!Element.prototype.matches) {
+        Element.prototype.matches =
+          Element.prototype.msMatchesSelector ||
+          Element.prototype.webkitMatchesSelector;
+      }
+
+      document.addEventListener('click', (event) => {
+        // check if the clicked element a checkbox
+        if (event.target.matches('[type="checkbox"]')) {
+          // get the 'form' element checkbox is located within
+          const form = event.target.closest('form');
+          // get all the input elements with the name 'password'; turn into array
+          // NB html edited to adjust name attr to just 'password'
+          const passwordInputs = Array.from(form.querySelectorAll('[name="password"]'));
+          // loop over array of password inputs and change 'type' attr as needed
+          passwordInputs.forEach((input) => {
+            event.target.checked ? (input.type = 'text') : (input.type = 'password');
+          });
+        }
+      });
     </script>
   </body>
 </html>

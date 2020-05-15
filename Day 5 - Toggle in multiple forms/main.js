@@ -7,6 +7,7 @@ document.addEventListener('click', (event) => {
     // NB html edited to adjust name attr to just 'password'
     const passwordInputs = [...form.querySelectorAll('[name="password"]')];
     // loop over array of password inputs and change 'type' attr as needed
+    console.log(passwordInputs);
     passwordInputs.forEach((input) => {
       event.target.checked ? (input.type = 'text') : (input.type = 'password');
     });
