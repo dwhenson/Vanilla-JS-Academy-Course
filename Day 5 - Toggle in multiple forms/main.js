@@ -1,17 +1,21 @@
-function toggglePassword(passwordInput) {
-  passwordInput.checked
-    ? (passwordInput.type = 'text')
-    : (passwordInput.type = 'password');
-}
+// function toggglePassword(passwordInput) {
+//   passwordInput.checked
+//     ? (passwordInput.type = 'text')
+//     : (passwordInput.type = 'password');
+// }
 
-function toggglePasswords (passwordInputs) {
-  passwordInputs.forEach(toggglePassword);
-}
+// function toggleVisability() {
+//   passwordInput.forEach((input) => {
+//     checkbox.checked ? (input.type = 'text') : (input.type = 'password');
+//   });
+// }
 
 document.addEventListener('click', (event) => {
-  if (event.target.matches('[type="checkbox"]')) {
+  if (event.target === ('[type="checkbox"]')) {
     const form = event.target.closest('form');
-    const passwordInputs = Array.from(form.querySelectorAll('[type="password"]'));
-    console.log(passwordInputs);
+    const passwordInputs = [...form.querySelectorAll('[type="password"]')];
+    passwordInputs.forEach((input) => {
+      event.target.checked ? (input.type = 'text') : (input.type = 'password');
+    });
   }
 });
