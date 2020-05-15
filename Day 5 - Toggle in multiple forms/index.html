@@ -96,11 +96,11 @@
       }
 
       document.addEventListener('click', (event) => {
-        // check if the clicked element a checkbox
+        // check if the clicked element is a checkbox
         if (event.target.matches('[type="checkbox"]')) {
-          // get the 'form' element checkbox is located within
+          // get the parent 'form' element the checkbox is located inside
           const form = event.target.closest('form');
-          // get all the input elements with the name 'password'; turn into array
+          // get all the input elements in selected form with the name 'password'; turn into array
           // NB html edited to adjust name attr to just 'password'
           const passwordInputs = Array.from(form.querySelectorAll('[name="password"]'));
           // loop over array of password inputs and change 'type' attr as needed
