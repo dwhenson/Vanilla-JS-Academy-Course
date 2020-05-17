@@ -83,29 +83,16 @@
     </form>
 
     <script>
-
-
-      /**
-       * Element.matches() polyfill (simple version)
-       * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
-       */
-      if (!Element.prototype.matches) {
-        Element.prototype.matches =
-          Element.prototype.msMatchesSelector ||
-          Element.prototype.webkitMatchesSelector;
-      }
-
       document.addEventListener('click', (event) => {
-        // check if the clicked element is a checkbox
         if (event.target.matches('[type="checkbox"]')) {
-          // get the parent 'form' element the checkbox is located inside
           const form = event.target.closest('form');
-          // get all the input elements in selected form with the name 'password'; turn into array
-          // NB html edited to adjust name attr to just 'password'
-          const passwordInputs = Array.from(form.querySelectorAll('[name="password"]'));
-          // loop over array of password inputs and change 'type' attr as needed
+          const passwordInputs = Array.from(
+            form.querySelectorAll('[name="password"]')
+          );
           passwordInputs.forEach((input) => {
-            event.target.checked ? (input.type = 'text') : (input.type = 'password');
+            event.target.checked
+              ? (input.type = 'text')
+              : (input.type = 'password');
           });
         }
       });
