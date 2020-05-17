@@ -82,20 +82,8 @@
       </p>
     </form>
 
-    <script>
-      document.addEventListener('click', (event) => {
-        if (event.target.matches('[type="checkbox"]')) {
-          const form = event.target.closest('form');
-          const passwordInputs = Array.from(
-            form.querySelectorAll('[name="password"]')
-          );
-          passwordInputs.forEach((input) => {
-            event.target.checked
-              ? (input.type = 'text')
-              : (input.type = 'password');
-          });
-        }
-      });
+
+      
     </script>
   </body>
 </html>
