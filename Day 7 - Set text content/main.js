@@ -11,4 +11,4 @@ function characterCounter(element) {
   element.textContent = text.value.length;
 }
 
-text.addEventListener('input', characterCounter(null, characterCount));
+text.addEventListener('input', characterCounter(characterCount));
