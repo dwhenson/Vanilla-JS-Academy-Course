@@ -10,5 +10,10 @@ function handleWordCount(element) {
   element.textContent = inputArea.value.split(' ').length;
 }
 
-inputArea.addEventListener('input', handleCharCount.bind(null, numberChars));
-inputArea.addEventListener('input', handleWordCount.bind(null, numberWords));
+inputArea.addEventListener('input', () => {
+  handleCharCount(numberChars);
+});
+inputArea.addEventListener('input', () => {
+  handleWordCount(numberWords);
+});
+
