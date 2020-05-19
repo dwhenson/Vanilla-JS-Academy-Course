@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Character Count</title>
+    <title>Character & Word Count</title>
 
     <style type="text/css">
       body {
@@ -22,18 +22,16 @@
     </style>
   </head>
   <body>
-    <h1>Character Count</h1>
+    <h1>Character & Word Count</h1>
 
     <label for="text">Enter your text below.</label>
     <textarea id="text"></textarea>
 
     <p>
-      You've written
+      You've written <strong><span id="word-count">0</span> words</strong> and
       <strong><span id="character-count">0</span> characters</strong>.
     </p>
 
-    <script src="main.js">
-      // Your code goes here...
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>
