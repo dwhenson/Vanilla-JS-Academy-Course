@@ -6,8 +6,15 @@ function handleCharCount(element) {
   element.textContent = inputArea.value.length;
 }
 
+// split on space
+// filter if great than 0
+// return length to element.textContent
+
 function handleWordCount(element) {
-  element.textContent = inputArea.value.split(' ').length;
+  const wordArray = inputArea.value.split(' ').filter(function (word) {
+    return word.length > 0;
+  });
+  element.textContent = wordArray.length;
 }
 
 inputArea.addEventListener('input', () => {
@@ -16,4 +23,3 @@ inputArea.addEventListener('input', () => {
 inputArea.addEventListener('input', () => {
   handleWordCount(numberWords);
 });
-
