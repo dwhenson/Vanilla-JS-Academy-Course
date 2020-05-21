@@ -19,10 +19,12 @@ function handleWordCount(element) {
   element.textContent = words.length;
 }
 
-/*----------  execution  ---------- */
+/* ----------  execution  ---------- */
 
 inputArea.addEventListener('input', () => {
   handleCharCount(numberChars);
   handleWordCount(numberWords);
 });
 
+
+  
