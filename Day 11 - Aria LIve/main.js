@@ -1,18 +1,14 @@
 /* ----------  variables  ---------- */
 
 const inputArea = document.querySelector('#text');
-const numberChars = document.querySelector('#character-count');
-const numberWords = document.querySelector('#word-count');
 const announce = document.querySelector('#announce');
 
 /* ----------  functions  ---------- */
 
 function updateContents() {
-	
 	function handleCharCount() {
-		numberChars.textContent = inputArea.value.length;
-		return numberChars.textContent;
-	};
+		return inputArea.value.length;
+	}
 
 	function handleWordCount() {
 		const wordCount = inputArea.value
@@ -20,12 +16,11 @@ function updateContents() {
 			.filter(function (wordCount) {
 				return wordCount.length > 0;
 			});
-		numberWords.textContent = wordCount.length;
-		return numberWords.textContent;
-	};
+		return wordCount.length;
+	}
 
 	function updateContent() {
-		announce.innerHTML = `
+		announce.textContent = `
 	You've written ${handleWordCount()} word and ${handleCharCount()} characters.
 	`;
 	}
