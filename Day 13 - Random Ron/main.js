@@ -6,27 +6,47 @@ const button = document.querySelector('button');
 
 /* ==========  functions  ========== */
 
-function fetchQuote(endpoint) {
-	fetch(endpoint)
-		.then(function (response) {
-			if (response.ok) {
-				return response.json();
-			} else {
-				return Promise.reject(response);
-			}
-		})
-		.then(function (data) {
-			quote.textContent = data;
-		})
-		.catch(function (error) {
-			console.warn('This when wrong:', error);
-		});
+/**
+ * converts response from an API to a JSON object
+ * @param  {string} response Unprocessed response from request
+ * @return {array}          Response converted to JSON or rejected promise
+ */
+function convertToJSON(response) {
+	return response.ok ? response.json() : Promise.reject(response);
+}
+
+/**
+ * displays the JSON object in the HTML
+ * @param  {array} data Array with quote returned by fetch request
+ */
+function displayData(data) {
+	quote.textContent = data;
+}
+
+/**
+ * catch and present error if fetch request != 'ok'
+ */
+function catchError(error) {
+	quote.textContent = `Sorry something went wrong; we got this error: "${error}"`;
+}
+
+/**
+ * run a fetch request, convert to JSON, and display on page
+ * @param  {sting} APIendpoint http address of API where making request
+ */
+function fetchQuote(APIendpoint) {
+	fetch(APIendpoint) //
+		.then(convertToJSON)
+		.then(displayData)
+		.catch(catchError);
 }
 
 /* ==========  execution  ========== */
 
-fetchQuote(endpoint); // initial run on page load
+// initial run on page load
+fetchQuote(endpoint);
 
+// repeat runs on click
 button.addEventListener('click', () => {
 	fetchQuote(endpoint);
 });
