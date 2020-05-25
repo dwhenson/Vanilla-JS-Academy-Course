@@ -1,7 +1,6 @@
 // Modify it so that if the same quote gets returned from the API in the last 50 quotes, you skip it and fetch another one instead.
 //
 // Create storage array
-// Add data to array
 // Check if newly retrieved quote matches item already in array
 // 		If not display then
 // 				Check if array is shorter than 50
@@ -15,28 +14,7 @@
 const endpoint = 'http://ron-swanson-quotes.herokuapp.com/v2/quotes';
 const quote = document.querySelector('blockquote');
 const button = document.querySelector('button');
-const retrievedQuotes = [
-	'I love nothing',
-	'Dear frozen yogurt, you are the celery of desserts. Be ice cream or be nothing. Zero stars.',
-	'Fish, for sport only, not for meat. Fish meat is practically a vegetable.',
-	"Capitalism: God's way of determining who is smart and who is poor.",
-	'I wanna punch you in the face so bad right now.',
-	'I love riddles!',
-	"I call this turf ‘n’ turf. It's a 16 oz T-bone and a 24 oz porterhouse. Also, whiskey and a cigar. I am going to consume all of this at the same time because I am a free American.",
-	"I've cried twice in my life. Once when I was seven and hit by a school bus. And then again when I heard that Li'l Sebastian has passed.",
-	"Don't waste energy moving unless necessary.",
-	'Just give me all the bacon and eggs you have. Wait...wait. I worry what you just heard was: Give me a lot of bacon and eggs. What I said was: Give me all the bacon and eggs you have. Do you understand?',
-	'People who buy things are suckers.',
-	'I believe luck is a concept invented by the weak to explain their failures.',
-	"Fishing relaxes me. It's like yoga, except I still get to kill something.",
-	'Normally, if given the choice between doing something and nothing, I’d choose to do nothing. But I will do something if it helps someone else do nothing. I’d work all night, if it meant nothing got done.',
-	'Breakfast food can serve many purposes.',
-	'Fish, for sport only, not for meat. Fish meat is practically a vegetable.',
-	'Under my tutelage, you will grow from boys to men. From men into gladiators. And from gladiators into Swansons.',
-	"My only official recommendations are US Army-issued mustache trimmers, Morton's Salt, and the C.R. Lawrence Fein two inch axe-style scraper oscillating knife blade.",
-	'Turkey can never beat cow.',
-	'Friends: one to three is sufficient.',
-];
+const retrievedQuotes = [];
 
 /* ==========  functions  ========== */
 
@@ -49,27 +27,35 @@ function convertToJSON(response) {
 	return response.ok ? response.json() : Promise.reject(response);
 }
 
-function maintainArray(data) {
-	console.log(data[0]);
-	retrievedQuotes.push(data[0]);
-	console.log(retrievedQuotes);
-	if (retrievedQuotes.indexOf(data[0]) > -1) {
-		console.log('new quote');
-	} else {
-		console.log('duplicate!!! ');
+/**
+ * keeps array length below 50 items
+ * @param  {array} array array that is being maintained below #items
+ * @return {array}       array trimmed to set length
+ */
+function maintainArray(array, length) {
+	if (array.length > length) {
+		array.shift();
 	}
 }
 
-// function checkDuplicate(data) {
-
-// }
+// remove retrieve quotes and add as parameter??
+function checkDuplicate(data) {
+	if (retrievedQuotes.indexOf(data[0]) > -1) {
+		fetchQuote(endpoint);
+	} else {
+		retrievedQuotes.push(data[0]);
+		maintainArray(retrievedQuotes, 50);
+	}
+	return retrievedQuotes;
+}
 
 /**
  * displays the JSON object in the HTML
  * @param  {array} data Array with quote returned by fetch request
  */
-function displayData(data) {
-	quote.textContent = data;
+function displayData(array) {
+	// display last item in array
+	quote.textContent = array.slice(-1)[0];
 }
 
 /**
@@ -86,8 +72,7 @@ function catchError(error) {
 function fetchQuote(APIendpoint) {
 	fetch(APIendpoint) //
 		.then(convertToJSON)
-		.then(maintainArray)
-		// .then(checkDuplicate)
+		.then(checkDuplicate)
 		.then(displayData)
 		.catch(catchError);
 }
