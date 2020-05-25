@@ -1,6 +1,3 @@
-// Modify it so that if the same quote gets returned from the API in the last 50 quotes, you skip it and fetch another one instead.
-
-
 /* ==========  variables  ========== */
 
 const endpoint = 'http://ron-swanson-quotes.herokuapp.com/v2/quotes';
@@ -15,7 +12,7 @@ const button = document.querySelector('button');
  * @return {array}           Response converted to JSON or rejected promise
  */
 function convertToJSON(response) {
-	return response.ok ? response.json() : Promise.reject(response);
+	return response.ok ? response.json(response) : Promise.reject(response);
 }
 
 /**
@@ -23,7 +20,6 @@ function convertToJSON(response) {
  * @param  {array} data Array with quote returned by fetch request
  */
 function displayData(data) {
-	console.log(data);
 	quote.textContent = data;
 }
 
