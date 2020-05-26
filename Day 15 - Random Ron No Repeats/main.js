@@ -31,22 +31,14 @@ function maintainArray(array, desiredLength) {
  * check if quote retrieved has is already in array of retrieved quotes
  * @param  {array} data quote retrieved in array form (length 0)
  */
-// CHECK - can this be turned into a helper function?
-function checkDuplicate(data) {
-	if (retrievedQuotes.indexOf(data[0]) > -1) {
+function displayQuote(data) {
+	if (retrievedQuotes.includes(data[0])) {
 		fetchQuote(endpoint);
-	} else {
-		retrievedQuotes.push(data[0]);
-		maintainArray(retrievedQuotes, 50);
-	}
-}
-
-/**
- * displays the JSON object in the HTML
- * @param  {array} data Array with quote returned by fetch request
- */
-function displayData(data) {
-	quote.textContent = retrievedQuotes.slice(-1), [0];
+		return
+	} 
+	quote.textContent = data[0];
+	retrievedQuotes.push(data[0]);
+	maintainArray(retrievedQuotes, 50);
 }
 
 /**
@@ -63,8 +55,7 @@ function catchError(error) {
 function fetchQuote(APIendpoint) {
 	fetch(APIendpoint) //
 		.then(convertToJSON)
-		.then(checkDuplicate)
-		.then(displayData)
+		.then(displayQuote)
 		.catch(catchError);
 }
 
