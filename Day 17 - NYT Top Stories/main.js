@@ -1,5 +1,3 @@
-// Check API documentation for updating
-
 /* ==========  variables  ========== */
 
 const app = document.querySelector('#app');
