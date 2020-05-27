@@ -40,6 +40,10 @@ function catchError(error) {
 		<p>I'm sorry we can't retrieve any suggestions at the moment.<br>The New York Times has some good suggestions <a href="https://www.nytimes.com">here</a></p>`;
 }
 
+/**
+ * run a fetch request, convert to JSON, and display on page
+ * @param {string} APIendpoint http address of API being 'fetched'
+ */
 function fetchStories(APIendpoint) {
 	fetch(APIendpoint)
 		.then(convertJSON) //
