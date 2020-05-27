@@ -1,41 +1,44 @@
-// Sort out error message - should array be global variable?
 // Check API documentation for updating
 
 /* ==========  variables  ========== */
 
+const app = document.querySelector('#app');
 const endpoint =
 	'https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=IVkW1nLsL3ufkeo8FjJrw6oXLUo7qZ62';
-const app = document.querySelector('#app');
 
 /* ==========  functions  ========== */
 
+/**
+ * converts response from an API to a JSON object
+ * @param  {string} (response) Unprocessed response from request
+ * @return {object}           Response converted to JSON or rejected promise
+ */
 function convertJSON(response) {
 	return response.ok ? response.json() : Promise.reject(response);
 }
 
+/**
+ * finds desired data on an array of objects, map to string and insert
+ * @param  {object} (responseJSON) response from fetch request in JSON form
+ * @return {string} desired values 'mapped' out and inserted into HTML
+ */
 function displayStories(responseJSON) {
-	const storyArray = responseJSON.results;
-	app.innerHTML = storyArray
+	const storyList = responseJSON.results
 		.map(function (story) {
-			return `<li><a href="${story.url}">${story.abstract}</a></li>`;
+			return `
+			<li><a href="${story.url}">${story.title}</a></li>
+			<p>${story.abstract}<b>
+			<br>${story.byline}</b><i>&nbsp(${story.published_date})</i></p>`;
 		})
 		.join('');
+	app.innerHTML = `<ul>${storyList}</ul>`;
 }
 
-// function displayStories(responseJSON) {
-// 	let html = '';
-// 	const storyArray = responseJSON.results;
-// 	storyArray.forEach(function (story, index) {
-// 		// CHECK why storyArray[index] and not story??
-// 		// NOTE because storyArray[index] = story (not story[index])
-// 		html += '<li>' + storyArray[index].abstract + '</li>';
-// 	});
-// 	app.innerHTML = '<ul>' + html + '</ul>';
-// }
-
+/**
+ * catch and present error if fetch request != 'OK'
+ */
 function catchError(error) {
 	app.innerHTML = `<p>I'm sorry we can't retrieve any suggestions at the moment.<br>The New York Times has some good suggestions <a href="https://www.nytimes.com">here</a></p>`;
-	console.log('Oh no!', error);
 }
 
 function fetchStories(APIendpoint) {
