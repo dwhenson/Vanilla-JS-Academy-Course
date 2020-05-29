@@ -11,23 +11,24 @@
 		/>
 	</head>
 	<body>
-		<h1>What to read today?</h1>
+		<h1>Want something to read today?</h1>
 
-		<label for="topics">Select from the following topics:</label>
+		<label for="topics">Choose from one of the following topics from the New York Times:</label>
 
 		<select style="display:inline-block" name="topics" id="topics">
 			<option selected disabled hidden>Select Topic</option>
-			<option value="arts">Arts</option>
-			<option value="books">Books</option>
-			<option value="food">Food</option>
-			<option value="movies">Movies</option>
-			<option value="science">Science</option>
-			<option value="technology">Technology</option>
-			<option value="travel">Travel</option>
+			<option value="Arts">Arts</option>
+			<option value="Books">Books</option>
+			<option value="Food">Food</option>
+			<option value="Movies">Movies</option>
+			<option value="Science">Science</option>
+			<option value="Technology">Technology</option>
+			<option value="Travel">Travel</option>
 		</select>
-
+		
+		<h2 id=heading></h2>
 		<div id="app" aria-live="polite">
-			<p>Loading suggested reading....</p>
+			<p id="placeholder"></p>
 		</div>
 		<script src="main.js"></script>
 	</body>

@@ -1,11 +1,36 @@
-// Get articles from categories, then render the top three from API data into markup and inject it into the #app element
+// Get articles from categories, then render the top three from API data into markup and inject it into the #app
+//
+// add a delegate event listener to option elements, on change? get event.target.value - how to store/extract - set as variable?
+// insert event.target.value into place holder APIend point, and call fetch based on this updated value (endpoint, 'category', and APIkey)
+// get returned array and trim so that only the first top five stories are presented (.array(slice)
+// map sliced array to generate html and present in app.inner html - include a heading before each section showing which section they are from
+//
+//
 
 /* ==========  variables  ========== */
 
 const dropdown = document.querySelector('#topics');
 const app = document.querySelector('#app');
+const placeholder = document.querySelector('#placeholder');
+const heading = document.querySelector('#heading');
 const apiKey = `MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
+let endpoint = '';
+
 /* ==========  functions  ========== */
+
+function createEndpoint(category) {
+	endpoint = `https://api.nytimes.com/svc/topstories/v2/${category}.json?api-key=`;
+	return endpoint;
+}
+
+function generatePlaceholder() {
+	placeholder.textContent = `One moment please...loading your articles`;
+}
+
+function generateHeading (category) {
+	heading.innerHTML = `Top Five Articles About ${category}`
+}
+
 
 /**
  * Converts response from an API to a JSON object
@@ -23,11 +48,12 @@ function convertJSON(response) {
  * @return {string} 					Articles 'mapped' out from array into HTML format
  */
 function render(element, articles) {
-	element.innerHTML = articles
+	element.innerHTML = articles.results
+		.slice(0, 5)
 		.map(function (article) {
 			return `
 			<article>
-			<h2><a href="${article.url}">${article.title}</a></h2>
+			<h3><a href="${article.url}">${article.title}</a></h3>
 			<p>${article.abstract}<b>
 			<br>${article.byline}</b><i>&nbsp(${article.published_date})</i></p>
 			</article>`;
@@ -40,7 +66,7 @@ function render(element, articles) {
  */
 function catchError(error) {
 	app.innerHTML = `
-		<p>I'm sorry we can't retrieve any suggestions at the moment.<br>The New York Times has some good suggestions <a href="https://www.nytimes.com">here</a></p>`;
+		<p>I'm sorry we can't retrieve any suggestions at the moment.<br><a href="https://www.nytimes.com">The New York Times has some good ideas though</a></p>`;
 }
 
 /**
@@ -51,19 +77,16 @@ function fetchStories(APIendpoint) {
 	fetch(APIendpoint + apiKey)
 		.then(convertJSON) //
 		.then((data) => {
-			render(app, data.results);
+			render(app, data);
 		})
 		.catch(catchError);
 }
 
 /* ==========  execution  ========== */
 
-// fetchStories(endpoint);
-
 dropdown.addEventListener('change', (event) => {
-	const category = event.target.value;
-	const endpoint = `https://api.nytimes.com/svc/topstories/v2/home.json?api-key=MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
-	console.log(endpoint);
+	generatePlaceholder();
+	createEndpoint(event.target.value);
+	generateHeading(event.target.value)
+	fetchStories(endpoint);
 });
-
-
