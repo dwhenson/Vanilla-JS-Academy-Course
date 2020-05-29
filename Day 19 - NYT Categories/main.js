@@ -1,10 +1,10 @@
+// Get articles from categories, then render the top three from API data into markup and inject it into the #app element
+
 /* ==========  variables  ========== */
 
+const dropdown = document.querySelector('#topics');
 const app = document.querySelector('#app');
-const endpoint =
-	'https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=';
-const apiKey = 'IVkW1nLsL3ufkeo8FjJrw6oXLUo7qZ62';
-
+const apiKey = `MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
 /* ==========  functions  ========== */
 
 /**
@@ -58,4 +58,12 @@ function fetchStories(APIendpoint) {
 
 /* ==========  execution  ========== */
 
-fetchStories(endpoint);
+// fetchStories(endpoint);
+
+dropdown.addEventListener('change', (event) => {
+	const category = event.target.value;
+	const endpoint = `https://api.nytimes.com/svc/topstories/v2/home.json?api-key=MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
+	console.log(endpoint);
+});
+
+
