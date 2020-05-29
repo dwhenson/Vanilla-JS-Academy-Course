@@ -1,30 +1,22 @@
-// Get articles from categories, then render the top three from API data into markup and inject it into the #app
-//
-// add a delegate event listener to option elements, on change? get event.target.value - how to store/extract - set as variable?
-// insert event.target.value into place holder APIend point, and call fetch based on this updated value (endpoint, 'category', and APIkey)
-// get returned array and trim so that only the first top five stories are presented (.array(slice)
-// map sliced array to generate html and present in app.inner html - include a heading before each section showing which section they are from
-//
-//
-
 /* ==========  variables  ========== */
 
 const dropdown = document.querySelector('#topics');
 const app = document.querySelector('#app');
-const placeholder = document.querySelector('#placeholder');
 const heading = document.querySelector('#heading');
+const placeholder = document.querySelector('#placeholder');
 const apiKey = `MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
-let endpoint = '';
+const placeholderText = `One moment please...loading your articles`;
+const numberArticles = 5;
+let endpoint;
 
 /* ==========  functions  ========== */
-
 
 /**
  * Adds placeholder text while fetch is working
  * @return {string} text displayed in target element
  */
-function generatePlaceholder() {
-	placeholder.textContent = `One moment please...loading your articles`;
+function generatePlaceholder(text) {
+	placeholder.textContent = text;
 }
 
 /**
@@ -32,8 +24,8 @@ function generatePlaceholder() {
  * @param  {string} category 	Value from event target selected			
  * @return {string}						Completed API endpoint
  */
-function createEndpoint(category) {
-	endpoint = `https://api.nytimes.com/svc/topstories/v2/${category}.json?api-key=`;
+function createEndpoint(topic) {
+	endpoint = `https://api.nytimes.com/svc/topstories/v2/${topic}.json?api-key=`;
 	return endpoint;
 }
 
@@ -42,13 +34,13 @@ function createEndpoint(category) {
  * @param  {string} category Value from event target selected
  * @return {string}          HTML inserted into target element
  */
-function generateHeading (category) {
-	heading.innerHTML = `Top Five Articles About ${category}`
+function generateHeading (topic) {
+	heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`
 }
 
 /**
  * Converts response from an API to a JSON object
- * @param  {string} Response 	Unprocessed response from request
+ * @param  {string} response 	Unprocessed response from request
  * @return {object} 					Response converted to JSON or rejected promise
  */
 function convertJSON(response) {
@@ -62,14 +54,16 @@ function convertJSON(response) {
  * @return {string} 					Articles 'mapped' out from array into HTML format
  */
 function render(element, articles) {
+	console.log(articles.results);
 	element.innerHTML = articles.results
-		.slice(0, 5)
+		.slice(0, numberArticles)
 		.map(function (article) {
 			return `
 			<article>
 			<h3><a href="${article.url}">${article.title}</a></h3>
-			<p>${article.abstract}<b>
-			<br>${article.byline}</b><i>&nbsp(${article.published_date})</i></p>
+			<i>Published on ${article.published_date.slice(0,10)}</i>
+			<p>${article.abstract}
+			<br><b>${article.byline}</b></p>
 			</article>`;
 		})
 		.join('');
@@ -80,7 +74,8 @@ function render(element, articles) {
  */
 function catchError(error) {
 	app.innerHTML = `
-		<p>I'm sorry we can't retrieve any suggestions at the moment.<br><a href="https://www.nytimes.com">The New York Times has some good ideas though</a></p>`;
+		<p>I'm sorry we can't retrieve any suggestions at the moment.<br>
+		<a href="https://www.nytimes.com">The New York Times</a> has some good ideas though</p>`;
 }
 
 /**
@@ -99,8 +94,9 @@ function fetchStories(APIendpoint) {
 /* ==========  execution  ========== */
 
 dropdown.addEventListener('change', (event) => {
-	generatePlaceholder();
-	createEndpoint(event.target.value);
-	generateHeading(event.target.value)
+	const topic = event.target.value;
+	generatePlaceholder(placeholderText);
+	createEndpoint(topic);
+	generateHeading(topic)
 	fetchStories(endpoint);
 });
