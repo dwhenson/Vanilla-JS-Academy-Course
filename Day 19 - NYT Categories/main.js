@@ -18,19 +18,33 @@ let endpoint = '';
 
 /* ==========  functions  ========== */
 
+
+/**
+ * Adds placeholder text while fetch is working
+ * @return {string} text displayed in target element
+ */
+function generatePlaceholder() {
+	placeholder.textContent = `One moment please...loading your articles`;
+}
+
+/**
+ * Creates APIendpoint based on option selected 
+ * @param  {string} category 	Value from event target selected			
+ * @return {string}						Completed API endpoint
+ */
 function createEndpoint(category) {
 	endpoint = `https://api.nytimes.com/svc/topstories/v2/${category}.json?api-key=`;
 	return endpoint;
 }
 
-function generatePlaceholder() {
-	placeholder.textContent = `One moment please...loading your articles`;
-}
-
+/**
+ * Creates header based on selected category
+ * @param  {string} category Value from event target selected
+ * @return {string}          HTML inserted into target element
+ */
 function generateHeading (category) {
 	heading.innerHTML = `Top Five Articles About ${category}`
 }
-
 
 /**
  * Converts response from an API to a JSON object
