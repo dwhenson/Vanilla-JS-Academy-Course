@@ -1,22 +1,30 @@
+// Get articles from categories, then render the top three from API data into markup and inject it into the #app
+//
+// add a delegate event listener to option elements, on change? get event.target.value - how to store/extract - set as variable?
+// insert event.target.value into place holder APIend point, and call fetch based on this updated value (endpoint, 'category', and APIkey)
+// get returned array and trim so that only the first top five stories are presented (.array(slice)
+// map sliced array to generate html and present in app.inner html - include a heading before each section showing which section they are from
+//
+//
+
 /* ==========  variables  ========== */
 
 const dropdown = document.querySelector('#topics');
 const app = document.querySelector('#app');
-const heading = document.querySelector('#heading');
 const placeholder = document.querySelector('#placeholder');
+const heading = document.querySelector('#heading');
 const apiKey = `MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
-const placeholderText = `One moment please...loading your articles`;
-const numberArticles = 5;
-let endpoint;
+let endpoint = '';
 
 /* ==========  functions  ========== */
+
 
 /**
  * Adds placeholder text while fetch is working
  * @return {string} text displayed in target element
  */
-function generatePlaceholder(text) {
-	placeholder.textContent = text;
+function generatePlaceholder() {
+	placeholder.textContent = `One moment please...loading your articles`;
 }
 
 /**
@@ -24,8 +32,8 @@ function generatePlaceholder(text) {
  * @param  {string} category 	Value from event target selected
  * @return {string}						Completed API endpoint
  */
-function createEndpoint(topic) {
-	endpoint = `https://api.nytimes.com/svc/topstories/v2/${topic}.json?api-key=`;
+function createEndpoint(category) {
+	endpoint = `https://api.nytimes.com/svc/topstories/v2/${category}.json?api-key=`;
 	return endpoint;
 }
 
@@ -34,17 +42,22 @@ function createEndpoint(topic) {
  * @param  {string} category Value from event target selected
  * @return {string}          HTML inserted into target element
  */
+<<<<<<< HEAD
 function generateHeading(topic) {
 	return new Promise(function (resolve) {
 		resolve(
 			(heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`)
 		);
 	});
+=======
+function generateHeading (category) {
+	heading.innerHTML = `Top Five Articles About ${category}`
+>>>>>>> parent of 4f50024... Final refactored solution
 }
 
 /**
  * Converts response from an API to a JSON object
- * @param  {string} response 	Unprocessed response from request
+ * @param  {string} Response 	Unprocessed response from request
  * @return {object} 					Response converted to JSON or rejected promise
  */
 function convertJSON(response) {
@@ -58,6 +71,7 @@ function convertJSON(response) {
  * @return {string} 					Articles 'mapped' out from array into HTML format
  */
 function render(element, articles) {
+<<<<<<< HEAD
 	return new Promise(function (resolve) {
 		resolve(
 			(element.innerHTML = articles.results
@@ -69,6 +83,16 @@ function render(element, articles) {
 			<i>Published on ${article.published_date.slice(0, 10)}</i>
 			<p>${article.abstract}
 			<br><b>${article.byline}</b></p>
+=======
+	element.innerHTML = articles.results
+		.slice(0, 5)
+		.map(function (article) {
+			return `
+			<article>
+			<h3><a href="${article.url}">${article.title}</a></h3>
+			<p>${article.abstract}<b>
+			<br>${article.byline}</b><i>&nbsp(${article.published_date})</i></p>
+>>>>>>> parent of 4f50024... Final refactored solution
 			</article>`;
 				})
 				.join(''))
@@ -81,8 +105,7 @@ function render(element, articles) {
  */
 function catchError(error) {
 	app.innerHTML = `
-		<p>I'm sorry we can't retrieve any suggestions at the moment.<br>
-		<a href="https://www.nytimes.com">The New York Times</a> has some good ideas though</p>`;
+		<p>I'm sorry we can't retrieve any suggestions at the moment.<br><a href="https://www.nytimes.com">The New York Times has some good ideas though</a></p>`;
 }
 
 /**
@@ -101,8 +124,15 @@ function fetchStories(APIendpoint) {
 /* ==========  execution  ========== */
 
 dropdown.addEventListener('change', (event) => {
+<<<<<<< HEAD
 	const topic = event.target.value;
 	generatePlaceholder(placeholderText);
 	createEndpoint(topic);
 	Promise.all([generateHeading(topic), fetchStories(endpoint)]);
+=======
+	generatePlaceholder();
+	createEndpoint(event.target.value);
+	generateHeading(event.target.value)
+	fetchStories(endpoint);
+>>>>>>> parent of 4f50024... Final refactored solution
 });
