@@ -20,8 +20,8 @@ function generatePlaceholder(text) {
 }
 
 /**
- * Creates APIendpoint based on option selected 
- * @param  {string} category 	Value from event target selected			
+ * Creates APIendpoint based on option selected
+ * @param  {string} category 	Value from event target selected
  * @return {string}						Completed API endpoint
  */
 function createEndpoint(topic) {
@@ -34,8 +34,12 @@ function createEndpoint(topic) {
  * @param  {string} category Value from event target selected
  * @return {string}          HTML inserted into target element
  */
-function generateHeading (topic) {
-	heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`
+function generateHeading(topic) {
+	return new Promise(function (resolve) {
+		resolve(
+			(heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`)
+		);
+	});
 }
 
 /**
@@ -54,19 +58,22 @@ function convertJSON(response) {
  * @return {string} 					Articles 'mapped' out from array into HTML format
  */
 function render(element, articles) {
-	console.log(articles.results);
-	element.innerHTML = articles.results
-		.slice(0, numberArticles)
-		.map(function (article) {
-			return `
+	return new Promise(function (resolve) {
+		resolve(
+			(element.innerHTML = articles.results
+				.slice(0, numberArticles)
+				.map(function (article) {
+					return `
 			<article>
 			<h3><a href="${article.url}">${article.title}</a></h3>
-			<i>Published on ${article.published_date.slice(0,10)}</i>
+			<i>Published on ${article.published_date.slice(0, 10)}</i>
 			<p>${article.abstract}
 			<br><b>${article.byline}</b></p>
 			</article>`;
-		})
-		.join('');
+				})
+				.join(''))
+		);
+	});
 }
 
 /**
@@ -97,6 +104,5 @@ dropdown.addEventListener('change', (event) => {
 	const topic = event.target.value;
 	generatePlaceholder(placeholderText);
 	createEndpoint(topic);
-	generateHeading(topic)
-	fetchStories(endpoint);
+	Promise.all([generateHeading(topic), fetchStories(endpoint)]);
 });
