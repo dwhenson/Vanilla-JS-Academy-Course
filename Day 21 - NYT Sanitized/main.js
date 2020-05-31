@@ -1,4 +1,6 @@
-// NOTE consider adding placeholder text while loading?
+// Before rendering API data into the DOM as markup, sanitize it to protect yourself from any malicious code that might get sent back.
+// 
+
 
 /* ==========  variables  ========== */
 
@@ -37,6 +39,8 @@ function convertJSON(response) {
 function selectArticles(articles) {
 	return articles.slice(0, numberArticles);
 }
+
+// TODO add sanitizer function here??
 
 /**
  * Renders articles into DOM
