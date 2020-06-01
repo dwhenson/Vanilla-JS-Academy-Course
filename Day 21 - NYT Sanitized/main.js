@@ -8,7 +8,7 @@ const app = document.querySelector('#app');
 const numberArticles = 2;
 let endpoint;
 const apiKey = `MzjNjEmTGPTcAbKdbZonokosBAmd42Xd`;
-const topics = ['technology', 'books', 'food', 'science'];
+const topics = ['Technology', 'Books', 'Food', 'Science'];
 
 /* ==========  functions  ========== */
 
@@ -40,7 +40,18 @@ function selectArticles(articles) {
 	return articles.slice(0, numberArticles);
 }
 
-// TODO add sanitizer function here??
+/**
+ * Sanitize and encode all HTML in a user-submitted string
+ * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+ * @param  {String} string  The user-submitted string
+ * @return {String} string  The sanitized string
+ */
+function sanitizeHTML (string) {
+	const temp = document.createElement('div');
+	temp.textContent = string;
+	console.log(typeof temp.innerHTML);
+	return temp.innerHTML;
+};
 
 /**
  * Renders articles into DOM
@@ -85,6 +96,7 @@ function fetchStories(topic) {
 		.then(convertJSON) // fetched object (as)
 		.then((data) => { 
 			selectArticles(data.results); // JSON object.array[objects]
+			sanitizeHTML(data); // sanitize results to remove any xss risk
 			render(app, data, topic); // element, array[objects], topic
 		})
 		.catch(catchError);
