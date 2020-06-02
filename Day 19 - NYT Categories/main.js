@@ -20,8 +20,8 @@ function generatePlaceholder(text) {
 }
 
 /**
- * Creates APIendpoint based on option selected 
- * @param  {string} category 	Value from event target selected			
+ * Creates APIendpoint based on option selected
+ * @param  {string} category 	Value from event target selected
  * @return {string}						Completed API endpoint
  */
 function createEndpoint(topic) {
@@ -34,11 +34,13 @@ function createEndpoint(topic) {
  * @param  {string} category Value from event target selected
  * @return {string}          HTML inserted into target element
  */
-function generateHeading (topic) {
-	heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`
+function generateHeading(topic) {
+	return new Promise(function (resolve) {
+		resolve(
+			(heading.innerHTML = `Top ${numberArticles} Articles About ${topic}`)
+		);
+	});
 }
-
-
 
 /**
  * Converts response from an API to a JSON object
@@ -62,7 +64,7 @@ function render(element, articles) {
 			return `
 			<article>
 			<h3><a href="${article.url}">${article.title}</a></h3>
-			<i>Published on ${article.published_date.slice(0,10)}</i>
+			<i>Published on ${article.published_date.slice(0, 10)}</i>
 			<p>${article.abstract}
 			<br><b>${article.byline}</b></p>
 			</article>`;
@@ -98,6 +100,5 @@ dropdown.addEventListener('change', (event) => {
 	const topic = event.target.value;
 	generatePlaceholder(placeholderText);
 	createEndpoint(topic);
-	generateHeading(topic)
-	fetchStories(endpoint);
+	Promise.all([fetchStories(endpoint), generateHeading(topic)]);
 });
