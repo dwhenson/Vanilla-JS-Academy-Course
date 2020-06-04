@@ -63,6 +63,11 @@ const monsters = [
 	{ src: 'sock', class: 'sock', alt: 'A pair of socks.' },
 ];
 
+const modal = document.querySelector('.modal');
+const modalContent = document.querySelector('.modal-content')
+const enoughBtn = document.querySelector('.btn-enough');
+const moreBtn = document.querySelector('.btn-more');
+
 /* ==========  Functions  ========== */
 
 /**
@@ -109,31 +114,87 @@ function shuffleArray(array, element) {
 		.join('');
 }
 
+/**
+ * Remove the image selected as event target
+ * @param  {string} event The event from the listener
+ */
 function removeImage(event) {
 	if (event.target.className === 'door') {
 		event.target.remove();
 	}
 }
 
-function checkSock(event) {
-	if (event.target.nextElementSibling.className === 'sock') {
-		alert('Sorry - you got socked. Click OK to play again.');
-		window.location.reload();
+/**
+ * Show the modal
+ */
+function showModal() {
+	modal.style.display = 'block';
+	modalContent.focus();
+}
+
+/**
+ * Check if removeImage reveals a specific image underneath
+ * @param  {string} event The event from the listener
+ * @return {function}     A function to reload the page
+ */
+function checkSock(event, selector) {
+	if (event.target.nextElementSibling.className === selector) {
+		event.target.remove();
+		showModal();
+	}
+}
+
+/**
+ * Close the modal when selected events happed
+ * @param  {string} event The event from the listener
+ */
+function closeModal(event) {
+	if (event.target === modal) {
+		modal.style.display = 'none';
 	}
 }
 
 /* ==========  Execution  ========== */
 
+/* ----  Main ---- */
+
+// shuffle order in array
 shuffleArray(monsters, app);
 
+// listen for selection and run functions
 app.addEventListener('click', (event) => {
-	checkSock(event);
+	checkSock(event, 'sock'); // run first as traversing DOM based on event
 	removeImage(event);
 });
 
 app.addEventListener('keydown', (event) => {
 	if (event.code === 'Enter' || event.code === 'Space') {
-		checkSock(event);
+		checkSock(event, 'sock');
 		removeImage(event);
 	}
 });
+
+/* ----  Modal  ---- */
+
+// reload page if want to continue playing
+moreBtn.addEventListener('click', () => window.location.reload());
+
+moreBtn.addEventListener('keydown', (event) => {
+	if (event.code === 'Enter' || event.code === 'Space') {
+		window.location.reload();
+	}
+});
+
+// close modal if button clicked
+enoughBtn.addEventListener('click', () => {
+	modal.style.display = 'none';
+});
+
+enoughBtn.addEventListener('keydown', (event) => {
+	if (event.code === 'Enter' || event.code === 'Space') {
+		modal.style.display = 'none';
+	}
+});
+
+// close modal if click outside modal
+document.addEventListener('click', closeModal);
