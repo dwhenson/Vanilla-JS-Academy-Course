@@ -2,7 +2,6 @@
 
 const app = document.querySelector('#app');
 
-// TODO convert to array of objects and include alt text
 const monsters = [
 	{
 		src: 'monster1',
@@ -56,7 +55,7 @@ const monsters = [
 /* ==========  Functions  ========== */
 
 /**
- * Randomly shuffle an array
+ * Randomly shuffle an array (Fisher-Yates method)
  * https://stackoverflow.com/a/2450976/1293256
  * @param  {Array} array The array to shuffle
  * @return {String}      The first item in the shuffled array
@@ -67,7 +66,7 @@ const shuffle = function (array) {
 	let randomIndex;
 
 	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
+	while (currentIndex !== 0) {
 		// Pick a remaining element...
 		randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex -= 1;
