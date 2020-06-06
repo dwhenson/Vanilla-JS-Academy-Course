@@ -106,22 +106,6 @@ function shuffleArray(array, element) {
 }
 
 /**
- * Handle click events
- * @param  {object} event The event object
- * @param  {array}  array Array to select items from
- */
-function clickhandler(event, selector, array) {
-  // check if clicked element or parent has a specific attribute
-  const parentElement = event.target.closest(`[${selector}]`);
-  if (!parentElement) return;
-  // if so, get the element's index passed in from an array
-  const id = parentElement.getAttribute(selector);
-  // replace the parent element's innerHTML with new image and attributes
-  parentElement.parentNode.innerHTML = `<img src="images/${array[id].src}.svg" alt="${array[id].alt}" class="${array[id].class}">`;
-  checkResult(array, id);
-}
-
-/**
  * Show the modal
  */
 function showModal() {
@@ -139,6 +123,22 @@ function checkResult(array, id) {
     result.innerHTML = `Nice one. You did it!`;
     showModal();
   }
+}
+
+/**
+ * Handle click events
+ * @param  {object} event The event object
+ * @param  {array}  array Array to select items from
+ */
+function clickhandler(event, selector, array) {
+  // check if clicked element or parent has a specific attribute
+  const parentElement = event.target.closest(`[${selector}]`);
+  if (!parentElement) return;
+  // if so, get the element's index passed in from an array
+  const id = parentElement.getAttribute(selector);
+  // replace the parent element's innerHTML with new image and attributes
+  parentElement.parentNode.innerHTML = `<img src="images/${array[id].src}.svg" alt="${array[id].alt}" class="${array[id].class}">`;
+  checkResult(array, id);
 }
 
 /**
