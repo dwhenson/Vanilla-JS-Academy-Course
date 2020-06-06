@@ -119,7 +119,7 @@ function checkResult(array, id) {
   if (array[id].src === 'sock' && timesRun < array.length) {
     result.innerHTML = `Sorry! You got socked!!`;
     showModal();
-  } else if (array[id].src === 'sock' && timesRun === array.length) {
+  } else if (timesRun === array.length) {
     result.innerHTML = `Nice one. You did it!`;
     showModal();
   }
