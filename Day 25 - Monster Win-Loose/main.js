@@ -84,6 +84,7 @@ const shuffle = function (array) {
   return array;
 };
 
+
 /**
  * Shuffle an array and return re-ordered contents to the DOM
  * @param  {object} array   Array of items to be shuffled
@@ -178,7 +179,10 @@ document.addEventListener('click', enableRemoval);
 /* ----  Modal  ---- */
 
 // reload page if want to continue playing
-moreBtn.addEventListener('click', () => window.location.reload());
+moreBtn.addEventListener('click', () => {
+  shuffleArray(monsters, app);
+  modal.style.display = 'none';
+});
 
 // close modal if button clicked, and stop future clicks
 enoughBtn.addEventListener('click', () => {
