@@ -91,7 +91,7 @@ const shuffle = function (array) {
  * @return {string}         HTML string to be inserted into DOM
  */
 function shuffleArray(array, element) {
-  const suffledArray = shuffle(array); // CHECK why does slice stop shuffle?
+  const suffledArray = shuffle(array);
   element.innerHTML = suffledArray
     .map(function (item, index) {
       return ` 
@@ -113,12 +113,19 @@ function showModal() {
   modalContent.focus();
 }
 
+/**
+ * Check if the result is causes a win or loose       
+ * @param  {array} array The array of items being investigated
+ * @param  {number} id   The index of the item in the array
+ */
 function checkResult(array, id) {
-  // if the index is the last item (i.e. the sock), show the modal
+  // count the number of times function is run
   timesRun += 1;
+  // if the item is the sock, and not the last item show loose modal
   if (array[id].src === 'sock' && timesRun < array.length) {
     result.innerHTML = `Sorry! You got socked!!`;
     showModal();
+  // if the use manages to click all items in the array show won modal
   } else if (timesRun === array.length) {
     result.innerHTML = `Nice one. You did it!`;
     showModal();
@@ -130,7 +137,7 @@ function checkResult(array, id) {
  * @param  {object} event The event object
  * @param  {array}  array Array to select items from
  */
-function clickhandler(event, selector, array) {
+function clickHandler(event, selector, array) {
   // check if clicked element or parent has a specific attribute
   const parentElement = event.target.closest(`[${selector}]`);
   if (!parentElement) return;
@@ -151,6 +158,14 @@ function closeModal(event) {
   }
 }
 
+/**
+ * Removes event listener from the document
+ * @param  {event} event The event object
+ */
+function enableRemoval(event) {
+  clickHandler(event, 'data-monster-id', monsters);
+}
+
 /* ==========  Execution  ========== */
 
 /* ----  App ---- */
@@ -158,17 +173,16 @@ function closeModal(event) {
 // shuffle order in array
 shuffleArray(monsters, app);
 
-document.addEventListener('click', (event) => {
-  clickhandler(event, 'data-monster-id', monsters);
-});
+document.addEventListener('click', enableRemoval);
 
 /* ----  Modal  ---- */
 
 // reload page if want to continue playing
 moreBtn.addEventListener('click', () => window.location.reload());
 
-// close modal if button clicked
+// close modal if button clicked, and stop future clicks
 enoughBtn.addEventListener('click', () => {
+  document.removeEventListener('click', enableRemoval);
   modal.style.display = 'none';
 });
 
