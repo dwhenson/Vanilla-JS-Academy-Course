@@ -12,7 +12,7 @@ const headings = Array.from(document.querySelectorAll('h2'));
  */
 function createId(element) {
   if (!element.id) {
-    element.setAttribute('id', `${element.textContent}`);
+    element.setAttribute('id', `${element.textContent.replace(new RegExp(/[^a-z0-9]+/, 'ig'), '-').toLowerCase()}`);
   }
 }
 
@@ -32,6 +32,5 @@ function createToc(element, array) {
 }
 
 /* ==========  Execution  ========== */
-
 
 createToc(toc, headings);
