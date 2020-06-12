@@ -12,7 +12,12 @@ const headings = Array.from(document.querySelectorAll('h2'));
  */
 function createId(element) {
   if (!element.id) {
-    element.setAttribute('id', `${element.textContent.replace(new RegExp(/[^a-z0-9]+/, 'ig'), '-').toLowerCase()}`);
+    element.setAttribute(
+      'id',
+      `${element.textContent
+        .replace(new RegExp(/[^a-z0-9]+/, 'ig'), '-')
+        .toLowerCase()}`
+    );
   }
 }
 
@@ -20,11 +25,12 @@ function createId(element) {
  * Creates a list of items from an array
  * @param  {string} element Element into which list will be inserted
  * @param  {array} array   Array of items that will form the list
+ * return 
  */
 function createToc(element, array) {
   const tocHTML = array
     .map(function (item) {
-      createId(item)
+      createId(item);
       return `<li><a href="#${item.id}">${item.textContent}</a></li>`;
     })
     .join('');
