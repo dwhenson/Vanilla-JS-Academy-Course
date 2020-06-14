@@ -32,10 +32,10 @@
     return temp.innerHTML;
   }
 
-/**
- * Render the contents to HTML
- * @param  {string} element The element content is being inserted into
- */
+  /**
+   * Render the contents to HTML
+   * @param  {string} element The element content is being inserted into
+   */
   function render(element) {
     element.innerHTML = `
     <h2>${sanitizeHTML(location.city)} Weather</h2>
@@ -48,18 +48,19 @@
      </div>`;
   }
 
-  
   /**
    * Catch and present error if fetch request is not 'OK'
    */
   function catchError(error) {
     app.innerHTML = `
-      <p>I'm sorry we can't find the weather for your location at the moment. You could try looking out the window?</p>`;
+      <p>
+          I'm sorry we can't find the weather for your location at the moment. 
+      </p>`;
   }
 
-/**
- * Fetches weather based on location and calls render
-  */
+  /**
+   * Fetches weather based on location and calls render
+   */
   function updateWeather() {
     fetch(locationEndpoint)
       .then(convertJSON)
@@ -71,9 +72,7 @@
           .then(convertJSON)
           .then((weatherData) => {
             weather = weatherData.data[0];
-          })
-          .then(() => {
-            render(app, location, weather);
+            render(app);
           });
       })
       .catch(catchError);
