@@ -20,6 +20,7 @@
   const locationEndpoint = 'https://ipapi.co/json/';
   const weatherEndpoint = 'https://api.weatherbit.io/v2.0/current?';
   const weatherAPI = 'c81e60446f394ac3b6efb4b5c187cafa';
+  let weatherFetch;
   let location;
   let weather;
 
@@ -45,23 +46,29 @@
       .then(convertJSON)
       .then((data) => {
         location = data;
-        return fetch(
-          `${weatherEndpoint}city=${location.city}&key=${weatherAPI}`
-        )
-          .then(convertJSON)
-          .then((data) => {
-            weather = data.data[0].weather.description;
-          })
-          .then(() => {
-            render(app, location, weather);
-          });
+        weatherFetch = `${weatherEndpoint}city=${location.city}&key=${weatherAPI}`;
       })
       .catch(catchError);
   }
 
+  console.log(weatherFetch);
+  // function getWeather(fetchWeather) {
+  //   console.log(fetchWeather);
+  //   fetch(fetchWeather)
+  //     .then(convertJSON)
+  //     .then((data) => {
+  //       weather = data.data[0].weather.description;
+  //     })
+  //     .then(() => {
+  //       render(app, location, weather);
+  //     })
+  //     .catch(catchError);
+  // }
+
   /* ==========  Execution  ========== */
 
   updateWeather(locationEndpoint);
+  // getWeather(weatherFetch)
 
   // close avoid global scope
 })();
