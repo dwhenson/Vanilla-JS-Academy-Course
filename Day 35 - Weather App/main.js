@@ -1,5 +1,3 @@
-// Figure out associated icons...
-
 // avoid global scope
 (function () {
   /* ==========  Variables  ========== */
@@ -13,22 +11,57 @@
 
   /* ==========  Functions  ========== */
 
+  /**
+   * Converts response from an API to a JSON object
+   * @param  {string} response  Unprocessed response from request
+   * @return {object}           Response converted to JSON or rejected promise
+   */
   function convertJSON(response) {
     return response.ok ? response.json() : Promise.reject(response);
   }
 
-  function render(element, location, weather) {
-    element.innerHTML = `
-      The weather in ${location.city} is ${weather.toLowerCase()} right now`;
+  /**
+   * Sanitize and encode all HTML in a user-submitted string
+   * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+   * @param  {String} string  The user-submitted string
+   * @return {String} string  The sanitized string
+   */
+  function sanitizeHTML(string) {
+    const temp = document.createElement('div');
+    temp.textContent = string;
+    return temp.innerHTML;
   }
 
+/**
+ * Render the contents to HTML
+ * @param  {string} element The element content is being inserted into
+ */
+  function render(element) {
+    element.innerHTML = `
+    <h2>${sanitizeHTML(location.city)} Weather</h2>
+      <div id="flex">
+        <p>
+          ${sanitizeHTML(weather.weather.description)}
+          <br>Temperature: ${sanitizeHTML(weather.temp)}&#8451
+        </p>
+        <img src="icons/${sanitizeHTML(weather.weather.icon)}.png"/>
+     </div>`;
+  }
+
+  
+  /**
+   * Catch and present error if fetch request is not 'OK'
+   */
   function catchError(error) {
     app.innerHTML = `
       <p>I'm sorry we can't find the weather for your location at the moment. You could try looking out the window?</p>`;
   }
 
-  function updateWeather(endpoint) {
-    fetch(endpoint)
+/**
+ * Fetches weather based on location and calls render
+  */
+  function updateWeather() {
+    fetch(locationEndpoint)
       .then(convertJSON)
       .then((data) => {
         location = data;
@@ -37,7 +70,7 @@
         )
           .then(convertJSON)
           .then((weatherData) => {
-            weather = weatherData.data[0].weather.description;
+            weather = weatherData.data[0];
           })
           .then(() => {
             render(app, location, weather);
@@ -48,9 +81,7 @@
 
   /* ==========  Execution  ========== */
 
-  updateWeather(locationEndpoint);
+  updateWeather();
 
-  // close avoid global scope
+  // close function to avoid global scope
 })();
-
-
