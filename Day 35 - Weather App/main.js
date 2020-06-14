@@ -44,7 +44,7 @@
           ${sanitizeHTML(weather.weather.description)}
           <br>Temperature: ${sanitizeHTML(weather.temp)}&#8451
         </p>
-        <img src="icons/${sanitizeHTML(weather.weather.icon)}.png"/>
+        <img src="icons/${sanitizeHTML(weather.weather.icon)}.png" alt=""/>
      </div>`;
   }
 
