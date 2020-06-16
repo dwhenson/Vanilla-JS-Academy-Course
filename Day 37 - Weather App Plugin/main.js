@@ -1,6 +1,5 @@
 // Avoid global scope
 (function () {
-
   const fahrenheit = 'units=I';
   const celsius = 'units=M';
 
@@ -28,15 +27,6 @@
     /* ==========  Functions  ========== */
 
     /**
-     * Converts response from an API to a JSON object
-     * @param  {string} response  Unprocessed response from request
-     * @return {object}           Response converted to JSON or rejected promise
-     */
-    function convertJSON(response) {
-      return response.ok ? response.json() : Promise.reject(response);
-    }
-
-    /**
      * Sanitize and encode all HTML in a user-submitted string
      * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
      * @param  {String} string  The user-submitted string
@@ -49,27 +39,46 @@
     }
 
     /**
+     * Checks what temp units are passed and displays correct symbol
+     * @return {string} C or F
+     */
+    function checkUnits() {
+      return settings.units === 'celsius' ? 'C' : 'F';
+    }
+
+    /**
+     * Checks if user wants an icon and renders accordingly
+     * @param  {array} weather The weather array retried from API call
+     * @return {string}        An img tag with or without icon src completed
+     */
+    function includeIcon(weather) {
+      return settings.icon === 'yes'
+        ? `<img src="icons/${sanitizeHTML(weather.weather.icon)}.png" alt=""/>`
+        : `<img>`;
+    }
+
+    /**
      * Render the contents to HTML
      * @param  {string} element The element content is being inserted into
      */
     function render(element, location, weather) {
       element.innerHTML = `
     <${settings.intro}>${settings.message}<${settings.intro}>
-    <h3>${sanitizeHTML(location.city)}</h3>
+    <h2>${sanitizeHTML(location.city)} Weather</h2>
       <div id="flex">
-        <p>
-          ${sanitizeHTML(weather.weather.description)}<br>
-          Temperature: ${sanitizeHTML(weather.temp)}
-          &deg${settings.units === 'celsius' ? 'C' : 'F'}
-        </p>
-        ${
-          settings.icon === 'yes'
-            ? `<img src="icons/${sanitizeHTML(
-                weather.weather.icon
-              )}.png" alt=""/>`
-            : `<img>`
-        }
+        <p>${sanitizeHTML(weather.weather.description)}</p>
+        <p>${sanitizeHTML(weather.temp)}&deg${checkUnits()}</p>
+        ${includeIcon(weather)}
      </div>`;
+    }
+
+    /**
+     * Converts response from an API to a JSON object
+     * @param  {string} response  Unprocessed response from request
+     * @return {object}           Response converted to JSON or rejected promise
+     */
+    function convertJSON(response) {
+      return response.ok ? response.json() : Promise.reject(response);
     }
 
     /**
@@ -121,8 +130,6 @@
   // icon: 'yes' or 'no'
 
   getWeatherRender({
-    units: fahrenheit,
-    // icon: 'no',
   });
   // close avoid global scope
 })();

@@ -1,4 +1,14 @@
 #flex {
   display: flex;
+  flex-direction: column;
   align-items: center;
+}
+
+img {
+  order: -1;
+  width: 50%;
+}
+
+P {
+  font-size: 1.5rem;
 }
