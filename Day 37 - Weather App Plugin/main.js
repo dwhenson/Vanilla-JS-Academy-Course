@@ -1,12 +1,26 @@
-// avoid global scope
-(function () {
-  /* ==========  Variables  ========== */
 
-  const app = document.querySelector('#app');
+// Enable or disable the icon for the weather conditions.
+
+function getWeatherRender(options) {
+  /* ==========  Variables  ========== */
   const locationEndpoint = 'https://ipapi.co/json/';
   const weatherEndpoint = 'https://api.weatherbit.io/v2.0/current?';
   const weatherAPI = 'c81e60446f394ac3b6efb4b5c187cafa';
 
+  // default options
+  const defaults = {
+    element: '#app',
+    intro: 'h2',
+    message: "Too lazy to look out the window? Here's the weather",
+    units: 'celsius',
+    // icon: present,
+  };
+
+  // combine options object into defaults object
+  const settings = Object.assign(defaults, options);
+
+  // set default for element to insert HTML into
+  const app = document.querySelector(settings.element);
   /* ==========  Functions  ========== */
 
   /**
@@ -36,11 +50,13 @@
    */
   function render(element, location, weather) {
     element.innerHTML = `
-    <h2>${sanitizeHTML(location.city)} Weather</h2>
+    <${settings.intro}>${settings.message}<${settings.intro}>
+    <h3>${sanitizeHTML(location.city)}</h3>
       <div id="flex">
         <p>
-          ${sanitizeHTML(weather.weather.description)}
-          <br>Temperature: ${sanitizeHTML(weather.temp)}&#8451
+          ${sanitizeHTML(weather.weather.description)}<br>
+          Temperature: ${sanitizeHTML(weather.temp)}
+          &deg${settings.units === 'celsius' ? 'C' : 'F'}
         </p>
         <img src="icons/${sanitizeHTML(weather.weather.icon)}.png" alt=""/>
      </div>`;
@@ -64,7 +80,7 @@
       .then((data) => {
         location = data;
         return fetch(
-          `${weatherEndpoint}city=${location.city}&key=${weatherAPI}`
+          `${weatherEndpoint}city=${location.city}&${settings.units}&key=${weatherAPI}`
         );
       })
       .then(convertJSON)
@@ -74,9 +90,17 @@
       .catch(catchError);
   }
 
+
+  updateWeather(); 
+}
+
+
   /* ==========  Execution  ========== */
 
-  updateWeather();
+// Unit options
+const fahrenheit = 'units=I';
+const celsius = 'units=M';
 
-  // close function to avoid global scope
-})();
+getWeatherRender({
+  units: fahrenheit
+});
