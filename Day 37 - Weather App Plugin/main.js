@@ -1,10 +1,20 @@
 // Avoid global scope
 (function () {
+  
+  // global variables to be used in function call, if required
   const fahrenheit = 'units=I';
   const celsius = 'units=M';
 
+  /**
+   * Gets weather based on user location and renders to index.html
+   * @param  {object} options Options included by caller to overwrite defaults
+   * @return {string}         HTML elements and text contents
+   */
   function getWeatherRender(options) {
+
     /* ==========  Variables  ========== */
+
+    // API call information
     const locationEndpoint = 'https://ipapi.co/json/';
     const weatherEndpoint = 'https://api.weatherbit.io/v2.0/current?';
     const weatherAPI = 'c81e60446f394ac3b6efb4b5c187cafa';
@@ -18,13 +28,15 @@
       icon: 'yes',
     };
 
-    // combine options object into defaults object
+    // combines options object into defaults object and overwrites as needed
     const settings = Object.assign(defaults, options);
 
-    // set element to insert HTML into
+    // select element to insert final HTML into
     const app = document.querySelector(settings.element);
 
     /* ==========  Functions  ========== */
+
+    /* ----  Render html and associated helper functions  ---- */
 
     /**
      * Sanitize and encode all HTML in a user-submitted string
@@ -72,6 +84,8 @@
      </div>`;
     }
 
+    /* ----  API call and associated helper functions  ---- */
+
     /**
      * Converts response from an API to a JSON object
      * @param  {string} response  Unprocessed response from request
@@ -108,9 +122,10 @@
         })
         .catch(catchError);
     }
-
     updateWeather();
   }
+
+  /* ----  End getWeatherRender function  ---- */
 
   /* ==========  Execution  ========== */
 
@@ -129,7 +144,7 @@
   // Icon options
   // icon: 'yes' or 'no'
 
-  getWeatherRender({
-  });
+  getWeatherRender({});
+
   // close avoid global scope
 })();
