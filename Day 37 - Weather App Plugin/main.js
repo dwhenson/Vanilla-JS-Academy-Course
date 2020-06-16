@@ -1,6 +1,6 @@
 // Avoid global scope
 (function () {
-  
+
   // global variables to be used in function call, if required
   const fahrenheit = 'units=I';
   const celsius = 'units=M';
@@ -144,7 +144,11 @@
   // Icon options
   // icon: 'yes' or 'no'
 
-  getWeatherRender({});
+  getWeatherRender({
+    // add your options here - uncomment below to see how it works:
+    // message: 'this will give you a new message - update as needed'
+    // units: fahrenheit
+  });
 
   // close avoid global scope
 })();
