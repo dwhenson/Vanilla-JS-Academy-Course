@@ -1,6 +1,5 @@
 // Avoid global scope
 (function () {
-
   // global variables to be used in function call, if required
   const fahrenheit = 'units=I';
   const celsius = 'units=M';
@@ -11,26 +10,25 @@
    * @return {string}         HTML elements and text contents
    */
   function getWeatherRender(options) {
-
     /* ==========  Variables  ========== */
-
-    // API call information
-    const locationEndpoint = 'https://ipapi.co/json/';
-    const weatherEndpoint = 'https://api.weatherbit.io/v2.0/current?';
-    const weatherAPI = 'c81e60446f394ac3b6efb4b5c187cafa';
 
     // default options
     const defaults = {
+      api: null,
       element: '#app',
-      intro: 'h2',
-      message: "Too lazy to look out the window? Here's the weather",
+      message:
+        'It is currently {{temp}} degrees {{units}} with {{conditions}} in {{city}}',
       units: 'celsius',
       icon: 'yes',
+      error: "Sorry, we can't get the weather for you right now",
     };
 
     // combines options object into defaults object and overwrites as needed
     const settings = Object.assign(defaults, options);
 
+    // API call information
+    const locationEndpoint = 'https://ipapi.co/json/';
+    const weatherEndpoint = 'https://api.weatherbit.io/v2.0/current?';
     // select element to insert final HTML into
     const app = document.querySelector(settings.element);
 
@@ -55,7 +53,7 @@
      * @return {string} C or F
      */
     function checkUnits() {
-      return settings.units === 'celsius' ? 'C' : 'F';
+      return settings.units === 'celsius' ? 'Celsius' : 'Fahrenheit';
     }
 
     /**
@@ -69,17 +67,32 @@
         : `<img>`;
     }
 
+/**
+ * Overwrites the message according to user inputs provided
+ * @param  {object} weather  The formated response from the weather API call
+ * @param  {object} location The formated response from the location call
+ */
+    function updateMesssage(weather, location) {
+      return settings.message
+        .replace('{{temp}}', sanitizeHTML(weather.temp))
+        .replace('{{units}}', checkUnits())
+        .replace(
+          '{{conditions}}', //
+          sanitizeHTML(weather.weather.description).toLowerCase()
+        )
+        .replace('{{city}}', location.city);
+    }
+
     /**
      * Render the contents to HTML
      * @param  {string} element The element content is being inserted into
+     * @param  {object} location The formated response from the location call
+     * @param  {object} weather The formated response from the weather API call
      */
     function render(element, location, weather) {
       element.innerHTML = `
-    <${settings.intro}>${settings.message}<${settings.intro}>
-    <h2>${sanitizeHTML(location.city)} Weather</h2>
+      <h2>${updateMesssage(weather, location)}</h2>
       <div id="flex">
-        <p>${sanitizeHTML(weather.weather.description)}</p>
-        <p>${sanitizeHTML(weather.temp)}&deg${checkUnits()}</p>
         ${includeIcon(weather)}
      </div>`;
     }
@@ -99,7 +112,7 @@
      * Catch and present error if fetch request is not 'OK'
      */
     function catchError(error) {
-      app.innerHTML = `<p>I'm sorry we can't find the weather for your location at the moment.</p>`;
+      app.innerHTML = settings.error;
       console.warn(error);
     }
 
@@ -113,7 +126,7 @@
         .then((data) => {
           location = data;
           return fetch(
-            `${weatherEndpoint}city=${location.city}&${settings.units}&key=${weatherAPI}`
+            `${weatherEndpoint}city=${location.city}&${settings.units}&key=${settings.api}`
           );
         })
         .then(convertJSON)
@@ -122,32 +135,31 @@
         })
         .catch(catchError);
     }
-    updateWeather();
+
+    /**
+     * Checks if API is present and calls updateWeather
+     * @param  {string} api The API key
+     */
+    function checkAPI(api) {
+      if (!api) {
+        alert('Please add an API key');
+      } else updateWeather();
+    }
+
+    checkAPI(settings.api);
   }
 
   /* ----  End getWeatherRender function  ---- */
 
   /* ==========  Execution  ========== */
 
-  // Element options
-  // element: 'any HTML element on index.html'
-
-  // Intro options
-  // intro: 'any HTML element'
-
-  // Message options
-  // Message: 'any text in a string'
-
-  // Unit options
-  // units: celsius(default) or fahrenheit (variables, not string)
-
-  // Icon options
-  // icon: 'yes' or 'no'
-
   getWeatherRender({
-    // add your options here - uncomment below to see how it works:
-    // message: 'this will give you a new message - update as needed'
-    // units: fahrenheit
+    api: 'c81e60446f394ac3b6efb4b5c187cafa',
+    // message: '{{temp}} {{conditions}} {{city}}',
+    // units: fahrenheit,
+    // units: celsius
+    // icon: 'yes'
+    // icon: 'no'
   });
 
   // close avoid global scope
