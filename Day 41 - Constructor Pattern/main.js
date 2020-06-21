@@ -1,35 +1,38 @@
-// GOAL Create a DOM manipulation library with public methods you can use to…
-
-// Get the first and last matching items from the DOM.
-
 const $ = (function () {
+  /**
+   * Create the constructor
+   * @param {string} selector The selector to use
+   */
+  const Constructor = function (selector) {
+    this.elements = Array.from(document.querySelectorAll(selector));
+  };
+
   /**
    * Converts a node list to an array
    * @param  {object} nodeList The node list to be converted
    * @return {object}          The converted node list as an array
    */
-  function convert(nodeList) {
-    return Array.from(nodeList);
-  }
-
-  const Constructor = function (array, toggle) {
-    this.array = array;
-    this.toggle = toggle;
+  Constructor.prototype.items = function () {
+    return this.elements;
   };
 
-  Constructor.prototype.getArray = function (element = 'element') {
-    const elements = convert(document.querySelectorAll(this.array[element]));
-    console.log(elements);
+  Constructor.prototype.first = function () {
+    return this.elements[0];
   };
 
-  Constructor.prototype.toggleClass = function (
-    element = 'element',
-    className
-  ) {
-    const elements = convert(document.querySelectorAll(this.array[element]));
-    console.log(elements);
-    elements.forEach((item) => {
-      item.classList.toggle(this.toggle[className]);
+  Constructor.prototype.last = function () {
+    return this.elements[this.elements.length - 1];
+  };
+
+  Constructor.prototype.addClass = function (className) {
+    this.elements.forEach(function (element) {
+      element.classList.add(className);
+    });
+  }; 
+
+  Constructor.prototype.removeClass = function (className) {
+    this.elements.forEach(function (element) {
+      element.classList.remove(className);
     });
   };
 
@@ -38,22 +41,6 @@ const $ = (function () {
 
 /* ==========  Testing  ========== */
 
-const buttons = new $(
-  {
-    element: 'button',
-  },
-  {
-    purple: 'btn-purple',
-    blue: 'btn-blue',
-  }
-);
-const listItems = new $(
-  {
-    element: 'li',
-  },
-  {
-    red: 'text-red',
-  }
-);
+const buttons = new $('button');
+buttons.removeClass('btn-purple');
 
-console.log(buttons, listItems);
