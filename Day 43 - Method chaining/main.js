@@ -62,8 +62,6 @@ const $ = (function () {
 
 const buttons = new $('button');
 const listItems = new $('li');
-buttons.addClass('btn-purple').removeClass('btn-blue');
-listItems.addClass('text-red').removeClass('text-red');
 
-
+buttons.removeClass('btn-blue');
 
