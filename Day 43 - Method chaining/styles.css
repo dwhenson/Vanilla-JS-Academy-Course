@@ -1,0 +1,23 @@
+body {
+  width: 88%;
+  max-width: 40em;
+  margin: 1em auto;
+}
+
+.btn-blue {
+  color: #fff;
+  background-color: #08c;
+}
+
+.btn-purple {
+  color: #fff;
+  background-color: rebeccapurple;
+}
+
+.text-red {
+  color: red;
+}
+
+.text-red {
+  color: rebeccapurple;
+}
