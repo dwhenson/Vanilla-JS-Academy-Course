@@ -1,34 +1,35 @@
-// GOAL As the user types, the value of a form field should automatically be saved.
-// When the page is reloaded or opened back up, the form should be repopulated with the user’s saved data.
-// If the form is submitted, clear the data from storage and wipe the form.
-//
-
-// TODO
-// Clear data on submit
-// Convert for loop to for of loop or something?
-// add in email verification in HTML?
-
 // Avoid global scope
 (function () {
   /* ==========  Variables  ========== */
 
   const form = document.querySelector('#save-me');
-  const submit = document.querySelector('button')
+  const submit = document.querySelector('button');
 
   /* ==========  Functions  ========== */
 
-  function setStorage(event) {
+  /**
+   * Sets the value of the input fields in local storage
+   */
+  function setStorage() {
     localStorage.setItem(event.target.name, event.target.value);
   }
 
+  /**
+   * Gets the values from local storage and returns them to the form
+   * @return {string} The values the user entered originally
+   */
   function getStorage() {
-    for (var i = 0; i < localStorage.length; i++) {
-      const content = document.querySelector(`#${localStorage.key(i)}`);
-      content.value = localStorage.getItem(localStorage.key(i));
+    const storage = Object.entries(localStorage);
+    for (const userData of storage) {
+      const input = document.querySelector(`#${userData[0]}`);
+      input.value = localStorage.getItem(userData[0]);
     }
   }
 
-  function removeStorage () {
+  /**
+   * Removes all values from local storage
+   */
+  function removeStorage() {
     localStorage.clear();
   }
 
