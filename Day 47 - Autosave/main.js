@@ -1,9 +1,17 @@
+// TODO 
+// change button event to submit
+// check values exist before action
+// Make less destructive:
+// localstorage.clear() - replace with remove? (prefix to form variables?)
+
+
 // Avoid global scope
 (function () {
   /* ==========  Variables  ========== */
 
   const form = document.querySelector('#save-me');
   const submit = document.querySelector('button');
+  const storagePrefix = 'form-autosave_'
 
   /* ==========  Functions  ========== */
 
@@ -11,7 +19,7 @@
    * Sets the value of the input fields in local storage
    */
   function setStorage() {
-    localStorage.setItem(event.target.name, event.target.value);
+    localStorage.setItem(storagePrefix + event.target.name, event.target.value);
   }
 
   /**
