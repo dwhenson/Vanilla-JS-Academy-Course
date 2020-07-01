@@ -15,11 +15,11 @@
 
   function getStorage() {
     const storage = Object.entries(localStorage);
-    for (const userData of storage) {
+    storage.forEach(function (userData) {
       const selector = userData[0].split('_').pop();
       const input = document.querySelector(`#${selector}`);
       input.value = localStorage.getItem(userData[0]);
-    }
+    });
   }
 
   function removeStorage() {
@@ -34,7 +34,7 @@
 
   /* ==========  Event listeners and inits  ========== */
 
+  getStorage();
   form.addEventListener('input', setStorage);
-  window.addEventListener('load', getStorage);
   submit.addEventListener('click', removeStorage);
 })();
