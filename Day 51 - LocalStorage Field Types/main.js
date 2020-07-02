@@ -1,3 +1,5 @@
+// FIXME radio buttons still not working!!!
+
 // Avoid global scope
 (function () {
   /* ==========  Variables  ========== */
@@ -20,7 +22,7 @@
       // if a radio check if already stored, if so delete and store new value
     } else if (event.target.getAttribute('type') === 'radio') {
       if (
-        localStorage.getItem(formData[storageID + event.target.id]) !== null
+        localStorage.getItem(formData[storageID + event.target.vale]) !== null
       ) {
         localStorage.removeItem(storageID + event.target.id);
       } else {
