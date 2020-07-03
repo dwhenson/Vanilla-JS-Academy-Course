@@ -1,157 +1,110 @@
-// GOAL Include all fields in local storage
-// Go through code to understand it again
-// Work out best hooks for getting and setting
-// Plan code...
+// FIXME need to rethink logic and approach
 
-//
-// Variables
-//
-const storageID = 'form-autosave';
+// avoid global scope
+(function () {
+  /* ==========  Variables  ========== */
 
-//
-// Methods
-//
+  const app = document.querySelector('#app');
+  const apiEndpoint = 'https://vanillajsacademy.com/api/pirates.json';
+  const storedData = {
+    localData: {},
+    timestamp: new Date().getTime(),
+  };
 
-/**
- * Get an ID for a field
- * @param  {Node}   field The field
- * @return {String}       The ID
- */
-const getID = function (field) {
-  if (field.id.length > 0) {
-    return field.id;
+  localStorage.setItem('scuttlebutt', JSON.stringify(storedData));
+
+  /* ==========  Functions  ========== */
+  /**
+   * Catch and present error if fetch request is not 'OK'
+   */
+  function catchError() {
+    app.innerHTML = `
+    <p>I'm sorry no pirates for you today</p>`;
   }
 
-  if (field.name.length > 0) {
-    return field.name;
+  // *
+  //  * Sanitize and encode all HTML in a user-submitted string
+  //  * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+  //  * @param  {String} string  The user-submitted string
+  //  * @return {String} string  The sanitized string
+  function sanitizeHTML(string) {
+    const temp = document.createElement('div');
+    temp.textContent = string;
+    return temp.innerHTML;
   }
 
-  return null;
-};
+  // Check if it's been less than a week since the data was saved
 
-/**
- * Load saved form data from localStorage
- */
-const loadData = function () {
-  // Get localStorage data
-  let saved = localStorage.getItem(storageID);
-  if (!saved) return;
-  saved = JSON.parse(saved);
+  function render(dataObject) {
+    app.innerHTML = `
+    <h1>${dataObject.localData.publication}</h1>
+    ${dataObject.localData.articles //
+      .map(function (article) {
+        return `
+      <article>
+      <h2>${sanitizeHTML(article.title)}</h2>
+      <i>${sanitizeHTML(article.pubdate)}</i>
+      <p>${sanitizeHTML(article.article)}</p>
+      </article>`;
+      })
+      .join('')}
+    `;
+  }
 
-  // Get all of the form fields
-  const fields = document.querySelectorAll('#save-me input, #save-me textarea');
-  // Loop through each field and load any saved data in localStorage
-  Array.prototype.slice.call(fields).forEach(function (field) {
-    // If the field has no usable ID, skip it
-    const id = getID(field);
-    if (!id) return;
+  /**
+   * Check if saved data is still valid
+   * @param  {Object}  saved   Saved data
+   * @param  {Number}  goodFor Amount of time in ms that the data is good for
+   * @return {Boolean}         If true, data is still valid
+   */
+  function isDataValid(saved, goodFor) {
+    // Check that there's data, and a timestamp key
+    if (!saved || !saved.localData || !saved.timestamp) return false;
+    // Get the difference between the timestamp and current time
+    const difference = new Date().getTime() - saved.timestamp;
+    console.log(difference);
+    return difference < goodFor;
+  }
 
-    // If there's no saved data in localStorage, skip it
-    if (!saved[id]) return;
-
-    // Set the field value to the saved data in localStorage
-
-    if (saved[id] === 'checked') {
-      field.setAttribute('checked', 'checked');
+  function checkValidity() {
+    const retrivedData = JSON.parse(localStorage.getItem('scuttlebutt'));
+    if (isDataValid(retrivedData, 400)) {
+      console.log('From cache');
+      render(retrivedData);
     } else {
-      field.value = saved[id];
+      console.log('From API call');
+      fetch(apiEndpoint) //
+        .then(convertJSON)
+        .then(storeData)
+        .then(render(retrivedData))
     }
-  });
-};
-
-/**
- * Handle input events
- * @param  {Event} event The event object
- */
-const inputHandler = function (event) {
-  // Only run for fields in the #save-me form
-  if (!event.target.closest('#save-me')) return;
-
-  if (
-    event.target.getAttribute('type') === 'checkbox' ||
-    event.target.getAttribute('type') === 'radio'
-  )
-    return;
-
-  // Get an ID for the field
-  const id = getID(event.target);
-  if (!id) return;
-
-  // Get existing data from localStorage
-  let saved = localStorage.getItem(storageID);
-  saved = saved ? JSON.parse(saved) : {};
-
-  // Add the field to the localStorage object
-  saved[id] = event.target.value;
-  // Save the object back to localStorage
-  localStorage.setItem(storageID, JSON.stringify(saved));
-};
-
-const checkHandler = function (event) {
-  if (event.target.getAttribute('type') === 'radio') return;
-  // Get an ID for the field
-  const id = getID(event.target);
-  if (!id) return;
-
-  // Get existing data from localStorage
-  let saved = localStorage.getItem(storageID);
-  saved = saved ? JSON.parse(saved) : {};
-
-  if (event.target.checked) {
-    saved[id] = 'checked';
-  }
-  localStorage.setItem(storageID, JSON.stringify(saved));
-};
-
-
-
-
-
-const radioHandler = function (event) {
-  if (event.target.getAttribute('type') === 'checkbox') return;
-  // Get an ID for the field
-  const id = event.target.value;
-  // Get existing data from localStorage
-  let saved = localStorage.getItem(storageID);
-  saved = saved ? JSON.parse(saved) : {};
-
-  // remove existing item if other radio button is clicked
-
-  if (event.target.value === 'yes' && localStorage.getItem('no') !== true) {
-    localStorage.removeItem('no');
   }
 
-  if (event.target.value === 'no' && localStorage.getItem('yes') !== true) {
-    localStorage.removeItem('yes');
+  function storeData(data) {
+    const scuttlebuttString = localStorage.getItem('scuttlebutt');
+    const scuttlebuttObject = JSON.parse(scuttlebuttString);
+    scuttlebuttObject.localData = data;
+    localStorage.setItem('scuttlebutt', JSON.stringify(scuttlebuttObject));
   }
 
-  saved[id] = 'checked';
-  localStorage.setItem(storageID, JSON.stringify(saved));
-};
+  /**
+   * Converts response from an API to a JSON object
+   * @param  {string} response  Unprocessed response from request
+   * @return {object}           Response converted to JSON or rejected promise
+   */
+  function convertJSON(response) {
+    return response.ok ? response.json() : Promise.reject(response);
+  }
 
-/**
- * Handle submit events
- * @param  {Event} event The event object
- */
-const submitHandler = function (event) {
-  // Only run for the #save-me form
-  if (event.target.id !== 'save-me') return;
+  function fetchScuttlebutt() {
+    fetch(apiEndpoint) //
+      .then(convertJSON)
+      .then(storeData)
+      .then(checkValidity)
+      .catch(catchError);
+  }
 
-  // Clear saved data
-  localStorage.removeItem(storageID);
-};
+  /* ==========  Event listeners and Inits  ========== */
 
-//
-// Inits & Event Listeners
-//
-
-// Load saved data from storage
-loadData();
-
-// Listen for input events
-document.addEventListener('input', inputHandler, false);
-document.addEventListener('input', checkHandler, false);
-document.addEventListener('input', radioHandler, false);
-
-// Listen for submit events
-document.addEventListener('submit', submitHandler, false);
+  fetchScuttlebutt();
+})();
