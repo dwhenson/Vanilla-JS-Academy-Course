@@ -1,7 +1,7 @@
 // avoid global scope
 (function () {
   /* ==========  Variables  ========== */
-  const duration = 60;
+  const duration = 120;
   const interval = 100;
   let timer;
 
@@ -21,11 +21,18 @@
     data: {
       time: duration,
     },
-    template: function (data) {
+    template(data) {
       if (data.time < 1) {
         return ` <div class ="clock">⏰</div><p><button data-restart-timer>Restart Timer</button></p>`;
       }
-      return data.time;
+      const mins = Math.floor((data.time % 3600) / 60)
+        .toString()
+        .padStart(2, '0');
+      const secs = Math.floor(data.time % 60)
+        .toString()
+        .padStart(2, '0');
+
+      return `${mins}:${secs}`;
     },
   });
 

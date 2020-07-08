@@ -1,0 +1,19 @@
+body {
+  margin: 1em auto;
+  max-width: 40em;
+  width: 88%;
+}
+
+.container {
+  margin: 0 auto;
+  width: 50%;
+  text-align: center;
+}
+
+.clock {
+  font-size: 4rem;
+}
+
+[aria-live] {
+  font-size: 1.75rem;
+}

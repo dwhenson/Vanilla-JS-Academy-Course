@@ -1,11 +1,3 @@
-// GOAL Modify it so that if the same quote gets returned from the API in the last 50 quotes, you skip it and fetch another one instead.
-
-// STEPS
-// Create empty array to store quotes
-// Check if array.includes(data??)
-// If so call fetch again
-// If not render and push to array
-// If array.length > 50 delete first item array.shift()
 
 // avoid global scope
 (function () {
@@ -36,7 +28,7 @@
 
   function fetchQuote(endpoint) {
     fetch(endpoint)
-      .then(function (response) {
+      .then((response) => {
         return response.ok ? response.json() : Promise.reject(response);
       })
       .then((data) => {
