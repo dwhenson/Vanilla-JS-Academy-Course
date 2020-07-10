@@ -16,27 +16,15 @@
     this.element.innerHTML = this.template(this.data);
   };
 
-  /* ==========  Instance  ========== */
-  const app = new Timer('#app', {
-    data: {
-      time: duration,
-    },
-    template(data) {
-      if (data.time < 1) {
-        return ` <div class ="clock">⏰</div><p><button data-restart-timer>Restart Timer</button></p>`;
-      }
-      const mins = Math.floor((data.time % 3600) / 60)
-        .toString()
-        .padStart(2, '0');
-      const secs = Math.floor(data.time % 60)
-        .toString()
-        .padStart(2, '0');
-
-      return `${mins}:${secs}`;
-    },
-  });
-
   /* ==========  Functions  ========== */
+
+  function getTimerHTML(props) {
+    const mins = parseInt(props.time / 60)
+      .toString()
+      .padStart(2, '0');
+    const secs = props.time % (60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  }
 
   function stopTimer() {
     if (app.data.time > 0) return;
@@ -59,6 +47,21 @@
     if (!event.target.hasAttribute('data-restart-timer')) return;
     startTimer();
   }
+
+  /* ==========  Instance  ========== */
+  const app = new Timer('#app', {
+    data: {
+      time: duration,
+    },
+    template(props) {
+      if (props.time < 1) {
+        return ` <div class ="clock">⏰</div>
+                  <button class="numbers" data-restart-timer>Restart Timer
+                  </button>`;
+      }
+      return getTimerHTML(props);
+    },
+  });
 
   /* ==========  Inits and Event listeners  ========== */
 
