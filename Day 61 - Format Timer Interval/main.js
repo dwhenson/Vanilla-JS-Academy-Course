@@ -5,7 +5,7 @@
   const interval = 1000;
   let timer;
   let state = 1;
-  let action = 'Pause Timer';
+  let action = 'Start';
 
   /* ==========  Constructor  ========== */
   const Timer = function (selector, options) {
@@ -45,19 +45,23 @@
   }
 
   function pauseTimer() {
+    if (app.data.time === duration) {
+      startTimer();
+      action = 'Pause';
+      return;
+    }
     if (state === 1) {
       state = 0;
-      action = 'Restart Timer';
+      action = 'Start';
       clearInterval(timer);
       app.render();
       return;
     }
     if (state === 0) {
       state = 1;
-      action = 'Pause Timer';
-      app.render();
+      action = 'Pause';
       timer = setInterval(countDown, interval);
-      return;
+      app.render();
     }
   }
 
@@ -77,13 +81,16 @@
     },
     template(props) {
       return `<p>${getTimerHTML(props)}</p>
-      <button class="numbers" data-restart-timer>Restart Timer</button>
+      <button class="numbers" data-restart-timer>Restart</button>
       <button class="numbers" data-pause-timer>${action}</button>`;
     },
   });
 
+
   /* ==========  Inits and Event listeners  ========== */
 
-  startTimer();
+  app.render();
   document.addEventListener('click', clickHandler);
 })();
+
+
