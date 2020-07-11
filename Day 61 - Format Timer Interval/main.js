@@ -1,25 +1,11 @@
-// GOAL  add two always-present buttons below the countdown in the timer
-// One button will say Start when the timer is stopped, and Pause when it’s running. Clicking it starts or stops the timer without resetting the time.
-// The second, Restart, will reset the time to its original value and start the timer over again.
-
-// STEPS
-// Button needs twos states: stopped and running
-// If stopped innerHTML === 'pause' and click stops timer
-// If running innerHTML === 'start' and click starts timer
-
-// Button 1: In template (or helper function - button in HTML?):
-// if data.time > 0 < duration (its running) innerHTML is pause
-// if data.time === duration (its not running) so innerHTML is start
-// on click, pause timer
-// pausetimer(), if timer, then clear timer, else add timer?
-//
-
 // avoid global scope
 (function () {
   /* ==========  Variables  ========== */
   const duration = 120;
-  const interval = 100;
+  const interval = 1000;
   let timer;
+  let state = 1;
+  let action = 'Pause Timer';
 
   /* ==========  Constructor  ========== */
   const Timer = function (selector, options) {
@@ -52,22 +38,36 @@
   }
 
   function startTimer() {
+    clearTimeout(timer);
     app.data.time = duration;
     app.render();
     timer = setInterval(countDown, interval);
   }
 
-  function clickHandler(event) {
-    if (!event.target.hasAttribute('data-restart-timer')) return;
-    startTimer();
+  function pauseTimer() {
+    if (state === 1) {
+      state = 0;
+      action = 'Restart Timer';
+      clearInterval(timer);
+      app.render();
+      return;
+    }
+    if (state === 0) {
+      state = 1;
+      action = 'Pause Timer';
+      app.render();
+      timer = setInterval(countDown, interval);
+      return;
+    }
   }
 
-  function pauseTimer(props) {
-    console.log(props.time, duration);
-    if (props.time > 0) {
-      return 'Pause';
+  function clickHandler(event) {
+    if (event.target.hasAttribute('data-restart-timer')) {
+      startTimer();
     }
-    return 'Start';
+    if (event.target.hasAttribute('data-pause-timer')) {
+      pauseTimer();
+    }
   }
 
   /* ==========  Instance  ========== */
@@ -78,7 +78,7 @@
     template(props) {
       return `<p>${getTimerHTML(props)}</p>
       <button class="numbers" data-restart-timer>Restart Timer</button>
-      <button class="numbers" data-pause-timer>${pauseTimer(props)}</button>`;
+      <button class="numbers" data-pause-timer>${action}</button>`;
     },
   });
 
