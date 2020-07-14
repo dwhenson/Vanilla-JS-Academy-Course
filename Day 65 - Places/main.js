@@ -1,6 +1,5 @@
 // avoid global scope
 (function () {
-  /* ==========  Variables  ========== */
 
   const endpoint = 'https://vanillajsacademy.com/api/places.json';
 
