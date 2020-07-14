@@ -13,7 +13,7 @@
         <h2><a href="${prop.url}">${prop.place}</a></h2>
         <img src="${prop.img}" alt="" width="640" height="427">
         <p>${prop.description}</p>
-        <p><i>${prop.location}</i></p>`;
+        <p><address>${prop.location}</address></p>`;
         })
         .join(' ');
     },
