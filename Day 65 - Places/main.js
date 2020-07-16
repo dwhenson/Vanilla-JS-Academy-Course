@@ -77,6 +77,5 @@
   });
 
   getPlaces();
-  loadStorage();
   document.addEventListener('click', renderButton);
 })();
