@@ -1,14 +1,7 @@
-// GOAL: For each place, add a “favorite” button. Give the button a different appearance when the place is “favorited” versus when it’s not. When the user revisits the page, their favorites should reload.
-//
-// STEPS
-// Create a function to change the attribute to true/false
-// Set value to local storage?
-//
-
 // avoid global scope
 (function () {
   const endpoint = 'https://vanillajsacademy.com/api/places.json';
-  const prefix = 'favorites'
+  const prefix = 'favorites';
 
   function getPlaces() {
     fetch(endpoint)
@@ -24,20 +17,31 @@
       });
   }
 
+  function loadStorage() {
+    let saved = localStorage.getItem(prefix);
+    if (!saved) return;
+    saved = JSON.parse(saved);
+    const buttons = Array.from(document.querySelectorAll('button'));
+    buttons.forEach(function (button) {
+      const id = button.id;
+      if (!saved[id]) return;
+      button.setAttribute('aria-pressed', saved[id]);
+    });
+  }
+
   function saveStorage(event) {
     let saved = localStorage.getItem(prefix);
     saved = saved ? JSON.parse(saved) : {};
-    saved[event.target.id] = event.target.id;
+    saved[event.target.id] = event.target.getAttribute('aria-pressed');
     localStorage.setItem(prefix, JSON.stringify(saved));
   }
-
 
   function renderButton(event) {
     if (!event.target.hasAttribute('aria-pressed')) return;
     event.target.getAttribute('aria-pressed') === 'true'
       ? event.target.setAttribute('aria-pressed', 'false')
-      : event.target.setAttribute('aria-pressed', 'true')
-    saveStorage(event)
+      : event.target.setAttribute('aria-pressed', 'true');
+    saveStorage(event);
   }
 
   function getPlacesHTML(props) {
@@ -67,10 +71,12 @@
       }
       return getPlacesFailHTML();
     },
+    load() {
+      loadStorage();
+    }
   });
 
   getPlaces();
+  loadStorage();
   document.addEventListener('click', renderButton);
 })();
-
-
