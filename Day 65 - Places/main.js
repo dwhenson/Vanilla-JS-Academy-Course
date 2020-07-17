@@ -1,7 +1,17 @@
 // avoid global scope
 (function () {
   const endpoint = 'https://vanillajsacademy.com/api/places.json';
-  const prefix = 'favorites';
+  const favesID = 'favorites';
+
+  function getFaves() {
+    const faves = localStorage.getItem(favesID);
+    const favesObj = faves ? JSON.parse(faves) : {};
+    return favesObj;
+  }
+
+  function saveFaves(faves) {
+    localStorage.setItem(favesID, JSON.stringify(faves));
+  }
 
   function getPlaces() {
     fetch(endpoint)
@@ -9,6 +19,7 @@
         response.ok ? response.json() : Promise.reject(response)
       )
       .then((data) => {
+        app.data.faves = getFaves();
         app.data.posts = data;
       })
       .catch((error) => {
@@ -17,39 +28,12 @@
       });
   }
 
-  function loadStorage() {
-    let saved = localStorage.getItem(prefix);
-    if (!saved) return;
-    saved = JSON.parse(saved);
-    const buttons = Array.from(document.querySelectorAll('button'));
-    buttons.forEach(function (button) {
-      const id = button.id;
-      if (!saved[id]) return;
-      button.setAttribute('aria-pressed', saved[id]);
-    });
-  }
-
-  function saveStorage(event) {
-    let saved = localStorage.getItem(prefix);
-    saved = saved ? JSON.parse(saved) : {};
-    saved[event.target.id] = event.target.getAttribute('aria-pressed');
-    localStorage.setItem(prefix, JSON.stringify(saved));
-  }
-
-  function renderButton(event) {
-    if (!event.target.hasAttribute('aria-pressed')) return;
-    event.target.getAttribute('aria-pressed') === 'true'
-      ? event.target.setAttribute('aria-pressed', 'false')
-      : event.target.setAttribute('aria-pressed', 'true');
-    saveStorage(event);
-  }
-
   function getPlacesHTML(props) {
     return props.posts
       .map(function (prop) {
         return `
         <h2>
-        <button id="${prop.id}" aria-label="Favorite" aria-pressed="false">❤</button>
+        <button data-fave="${prop.id}" aria-label="Save ${prop.place}" aria-pressed="${props.faves[prop.id]}">❤</button>
         <a href="${prop.url}">${prop.place}</a>
         </h2>
         <img src="${prop.img}" alt="" width="640" height="427">
@@ -71,11 +55,18 @@
       }
       return getPlacesFailHTML();
     },
-    load() {
-      loadStorage();
-    }
   });
 
+  function clickHandler(event) {
+    const place = event.target.getAttribute('data-fave');
+    if (!place) return;
+    app.data.faves[place] = app.data.faves[place] ? false : true;
+  }
+
+  function renderHandler(event) {
+    saveFaves(app.data.faves);
+  }
+
   getPlaces();
-  document.addEventListener('click', renderButton);
+
 })();
