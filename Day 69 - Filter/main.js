@@ -1,3 +1,11 @@
+// GOAL:
+// Add a “Visited” button for users to mark off locations they’ve already been to. Visited locations should be saved between visits.
+// When the user selects one of the filters, change the UI to only show locations that match the filter criteria
+//
+// STEPS:
+
+
+
 // avoid global scope
 (function () {
   const endpoint = 'https://vanillajsacademy.com/api/places.json';
