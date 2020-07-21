@@ -2,9 +2,12 @@
 img {
   width: 100%;
   height: auto;
-  aspect-ratio: attr(width) / attr(height);
 }
 
-[aria-pressed='true'] {
+[data-fave][aria-pressed='true'] {
   color: red;
+}
+
+[data-visit][aria-pressed='true'] {
+  color: green;
 }
